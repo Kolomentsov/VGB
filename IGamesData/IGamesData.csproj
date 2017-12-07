@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F1F1CDB2-D3A5-4B13-9360-BC6B970918F1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>VGB</RootNamespace>
-    <AssemblyName>VGB</AssemblyName>
+    <ProjectGuid>{CB2FC373-2AC2-4FA7-89B1-B4A3A0455131}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IGamesData</RootNamespace>
+    <AssemblyName>IGamesData</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,25 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotManager.cs" />
-    <Compile Include="GamesService.cs" />
-    <Compile Include="IGdbDTO\IGdbGames.cs" />
-    <Compile Include="IGdbDTO\IGdbGamesResponce.cs" />
-    <Compile Include="Interfaces\IGamesService.cs" />
-    <Compile Include="Interfaces\ITelegramBot.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="BotData\ActionWithBot\ChatAction.cs" />
+    <Compile Include="BotData\ActionWithBot\MessageAction.cs" />
+    <Compile Include="BotData\ActionWithBot\QueryAction.cs" />
+    <Compile Include="BotData\Data\ChatData.cs" />
+    <Compile Include="BotData\Data\DataResponse.cs" />
+    <Compile Include="BotData\Data\DataUpdate.cs" />
+    <Compile Include="BotData\Data\MessageData.cs" />
+    <Compile Include="BotData\Data\UserData.cs" />
+    <Compile Include="GamesData\Character.cs" />
+    <Compile Include="GamesData\Game.cs" />
+    <Compile Include="TelegamBotAnswers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TelegramBotClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IGamesData\IGamesData.csproj">
-      <Project>{CB2FC373-2AC2-4FA7-89B1-B4A3A0455131}</Project>
-      <Name>IGamesData</Name>
-    </ProjectReference>
+    <Content Include="GamesData\Top100.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
