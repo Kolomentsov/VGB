@@ -41,7 +41,7 @@ namespace VGB
 
         public async Task<Game> SingleMovieSearch(string query)
         {
-            try
+            try 
             {
                 using (var client = new HttpClient())
                 {
