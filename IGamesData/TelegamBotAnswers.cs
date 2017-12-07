@@ -12,7 +12,7 @@ namespace IGamesData
         {
             return String.Format(@"Hello! I'm bot that can provides you some information about computer games:
 Here is my list of commands:
-/getinfo - Shows information about this bot.
+/getinfo - Shows information about this bot. 
 /searchcharacters - Search characters by the name.
 /searchgames - Provides search by games title.
 /getbygenre - Returns random games by a particular genre.
