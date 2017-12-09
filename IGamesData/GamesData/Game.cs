@@ -8,7 +8,7 @@ namespace IGamesData
 
         public int Year { get; set; }
 
-        public object Cover { get; set; }
+        public string Cover { get; set; }
 
         public uint IGdbID { get; set; }
 

@@ -6,7 +6,7 @@
         CharacterSelecting,
         GameSelecting,
         GameSearching,
-        GenreSelecting,
+        GameModSelecting,
         RandomGameSelecting
     }
 }

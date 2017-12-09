@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 namespace VGB.IGdbDTO
 {
-    public class IGdbGamesResponce
+    public class IGdbGamesResponce<T>
     {
         [JsonProperty(PropertyName = "Search")]
         public List<IGdbGames> Games { get; set; }
 
         [JsonProperty(PropertyName = "totalResults")]
-        public int TotalResults { get; set; }
+        public List<T> TotalResults { get; set; }
     }
 }

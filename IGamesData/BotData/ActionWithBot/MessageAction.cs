@@ -6,10 +6,10 @@ namespace IGamesData.BotData.ActionWithBot
     public enum MessageAction
     {
 
-        Text,
-        Photo,
-        Video,
-        Sticker,
+        MesText,
+        MesPhoto,
+        MesVideo,
+        MesSticker,
     }
 
     public static class MessageAddition
@@ -18,16 +18,16 @@ namespace IGamesData.BotData.ActionWithBot
         {
             switch (message)
             {
-                case MessageAction.Text:
+                case MessageAction.MesText:
                     return new KeyValuePair<string, string>("sendMessage", "text");
 
-                case MessageAction.Photo:
+                case MessageAction.MesPhoto:
                     return new KeyValuePair<string, string>("sendPhoto", "photo");
 
-                case MessageAction.Video:
+                case MessageAction.MesVideo:
                     return new KeyValuePair<string, string>("sendVideo", "video");
 
-                case MessageAction.Sticker:
+                case MessageAction.MesSticker:
                     return new KeyValuePair<string, string>("sendSticker", "sticker");
 
                 default:

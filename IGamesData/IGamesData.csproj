@@ -51,6 +51,8 @@
     <Compile Include="BotData\Data\DataUpdate.cs" />
     <Compile Include="BotData\Data\MessageData.cs" />
     <Compile Include="BotData\Data\UserData.cs" />
+    <Compile Include="BotData\IGdbDTO\IGdbGames.cs" />
+    <Compile Include="BotData\IGdbDTO\IGdbGamesResponce.cs" />
     <Compile Include="GamesData\Character.cs" />
     <Compile Include="GamesData\Game.cs" />
     <Compile Include="TelegamBotAnswers.cs" />

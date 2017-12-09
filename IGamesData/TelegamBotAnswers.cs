@@ -15,9 +15,9 @@ Here is my list of commands:
 /getinfo - Shows information about this bot. 
 /searchcharacters - Search characters by the name.
 /searchgames - Provides search by games title.
-/getbygenre - Returns random games by a particular genre.
+/getbygamemod - Returns random games by a particular genre.
 /getsimilars - Returns games that are similar to some game.
-/somecomand- now playing!
+/some command???
 /gettop100 - Returns random games from IGDB top-100 best games.");
         }
         public static string SimpleCancelAnswer()
@@ -36,7 +36,7 @@ Here is my list of commands:
         => $"There is a random games from IGDB top 100 gamess for you:\n ''{t}''";
 
         public static string RandomGamesChoose()
-        => @"- enter ''OK'' to view info about this game
+        => @"- enter ''Ok'' to view info about this game
              - enter ''Next'' to get another games
              - enter ''Cancel to cancel this operation";
 
@@ -55,7 +55,7 @@ Here is my list of commands:
         public static string WrongChoiceMessage()
         => "You are asked to make a choice to get more information or put ''Cancel''! Please, try again!";
 
-        public static string MovieChooseMesage(int end, int from = 1)
+        public static string GamesChooseMessage(int end, int from = 1)
         => $"Please, choose the exact game to get more detailed information (enter its number from {from} to {end}) " +
            "or send ''Cancel''  if you just don't want to see detailed information or if there is no suitable game in the list above";
 
@@ -82,15 +82,15 @@ Here is my list of commands:
         public static string GetGameInformMessage(Game game)
         {
             return String.Format(@"{0}  ({1}) 
-Country: {2}
-Genre: {3}
-Characters: {4}
-Publishers: {5}
-Description: {6}
-Platform: {7}
-Director:{8}
-IGDB rating: {9}"
- , game.Title, game.Year, game.Country, game.Genre, game.Characters, game.Publishers, game.Description, game.Platforms, game.Director, game.IGDBRating);
+Genre: {2}
+IGdbID: {3}
+Category: {4}
+GameMod: {5}
+Discription: {6}
+IGdbRating:{7}
+Publisher: {8}
+Status: {9}"
+ , game.Name, game.Year, game.Cover, game.IGdbID, game.Category, game.GameMod, game.Discription, game.IGdbRating, game.Publisher, game.Status);
         }
         public static string NowPlayAnswer(List<Game> games)
         {
@@ -98,17 +98,17 @@ IGDB rating: {9}"
             int i = 1;
             foreach (var game in games)
             {
-                sb.AppendLine($"{i++}. {game.Title}");
-                sb.AppendLine($"Plot: {game.Description} \n");
+                sb.AppendLine($"{i++}. {game.Name}");
+                sb.AppendLine($"Plot: {game.Discription} \n");
             }
             return sb.ToString();
         }
-        public static string GenreAnswer(List<string> genres)
+        public static string GameModAnswer(List<string> gamemods)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var genre in genres)
+            foreach (var gm in gamemods)
             {
-                sb.AppendLine($"- {genre}");
+                sb.AppendLine($"- {gm}");
             }
             return sb.ToString();
         }
@@ -119,7 +119,7 @@ IGDB rating: {9}"
             int i = 1;
 
             foreach (var game in games)
-                sb.AppendLine($"{i++}. {game.Title} ({game.Year})");
+                sb.AppendLine($"{i++}. {game.Name} ({game.Year})");
 
             return sb.ToString();
         }
@@ -141,8 +141,8 @@ IGDB rating: {9}"
             int i = 1;
             foreach (var game in ch.Games)
             {
-                sb.AppendLine($"\n{i++}. {game.Title}");
-                sb.AppendLine($"Plot: {game.Description}");
+                sb.AppendLine($"\n{i++}. {game.Name}");
+                sb.AppendLine($"Plot: {game.Discription}");
             }
             return CharacterName + sb.ToString();
         }

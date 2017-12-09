@@ -16,7 +16,7 @@ namespace VGB.IGdbDTO
         public int Year { get; set; }
 
         [JsonProperty(PropertyName = "cover")]
-        public object Cover { get; set; }
+        public string Cover { get; set; }
 
         [JsonProperty(PropertyName = "id")]
         public uint IGdbID { get; set; }

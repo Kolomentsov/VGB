@@ -47,8 +47,6 @@
   <ItemGroup>
     <Compile Include="BotManager.cs" />
     <Compile Include="GamesService.cs" />
-    <Compile Include="IGdbDTO\IGdbGames.cs" />
-    <Compile Include="IGdbDTO\IGdbGamesResponce.cs" />
     <Compile Include="Interfaces\IGamesService.cs" />
     <Compile Include="Interfaces\ITelegramBot.cs" />
     <Compile Include="Program.cs" />

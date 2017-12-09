@@ -1,15 +1,20 @@
-﻿using System;
+﻿using IGamesData.BotData;
+using IGamesData.BotData.ActionWithBot;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using VGB.Interfaces;
 
 namespace VGB
 {
-    class TelegramBotClient : ITelegramBotClient
+    class TelegramBotClient : ITelegramBot
     {
 
-        public event Action<Message> OnMessageReceived;
+        public event Action<MessageData> OnMessageReceived;
         public event Action<string> LogMessage;
 
         private readonly string _token;
@@ -61,20 +66,20 @@ namespace VGB
                 return false;
             }
         }
-        public async Task<User> GetMeAsync() => await SendWebRequest<User>("getMe");
+        public async Task<UserData> GetMeAsync() => await SendWebRequest<UserData>("getMe");
 
-        public async Task<Update[]> GetUpdatesAsync()
+        public async Task<DataUpdate[]> GetUpdatesAsync()
         {
             var parameters = new Dictionary<string, object>
             {
                 {"offset", _offset},
             };
-            return await SendWebRequest<Update[]>("getUpdates", parameters);
+            return await SendWebRequest<DataUpdate[]>("getUpdates", parameters);
         }
 
 
 
-        public Task<Message> SendMessageAsync(MessageType type, long chatId, string content,
+        public Task<MessageData> SendMessageAsync(MessageAction type, long chatId, string content,
      Dictionary<string, object> parameters = null)
         {
             if (parameters == null)
@@ -87,23 +92,23 @@ namespace VGB
                 parameters.Add(typeInfo.Value, content);
             LogMessage($"Message to {chatId} was sent");
 
-            return SendWebRequest<Message>(typeInfo.Key, parameters);
+            return SendWebRequest<MessageData>(typeInfo.Key, parameters);
         }
 
 
-        public async Task<Message> SendPhotoAsync(long chatId, string path, string caption = "")
+        public async Task<MessageData> SendPhotoAsync(long chatId, string path, string caption = "")
         {
             var parameters = new Dictionary<string, object>
             {
                 {"caption", caption }
             };
             LogMessage($"Photo to {chatId} was sent");
-            return await SendMessageAsync(MessageType.PhotoMessage, chatId, path, parameters);
+            return await SendMessageAsync(MessageAction.MesPhoto, chatId, path, parameters);
         }
 
 
-        public async Task<Message> SendStickerAsync(long chatId, string stickerId)
-            => await SendMessageAsync(MessageType.StickerMessage, chatId, stickerId);
+        public async Task<MessageData> SendStickerAsync(long chatId, string stickerId)
+            => await SendMessageAsync(MessageAction.MesSticker, chatId, stickerId);
 
         public async Task<bool> SendChatAction(long chatId, ChatAction action)
         {
@@ -119,7 +124,7 @@ namespace VGB
         public async Task<T> SendWebRequest<T>(string methodName, Dictionary<string, object> parameters = null)
         {
             var uri = new Uri($"{_baseUrl}{_token}/{methodName}");
-            Response<T> responseObject = null;
+            DataResponse<T> responseObject = null;
 
             using (var client = new HttpClient())
             {
@@ -138,7 +143,7 @@ namespace VGB
                         response = await client.PostAsync(uri, httpContent);
                     }
                     var resultStr = await response.Content.ReadAsStringAsync();
-                    responseObject = JsonConvert.DeserializeObject<Response<T>>(resultStr);
+                    responseObject = JsonConvert.DeserializeObject<DataResponse<T>>(resultStr);
                 }
                 catch (HttpRequestException e)
                 {
