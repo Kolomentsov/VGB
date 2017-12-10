@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IGamesData.GamesData;
 using VGB.Interfaces;
 
 namespace VGB
@@ -49,14 +50,14 @@ namespace VGB
                 {
                     case QueryAction.GameSearching:
                         {
-                            var games = await _service.SearchGames(messagedata.Text);
+                            var games = _service.SearchGames(messagedata.Text);
                             if (games != null && games.Count != 0)
                             {
                                 if (games.Count == 1)
                                 {
                                     await SendInfoAboutGame(chatId, games[0]);
 
-                                    _singleDataForUser[chatId] = games[0].Name;
+                                    _singleDataForUser[chatId] = games[0].name;
                                 }
                                 else
                                 {
@@ -64,7 +65,7 @@ namespace VGB
                                     await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchAnswer(games));
                                     await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesChooseMessage(games.Count()));
 
-                                    _multipleDataForUser[chatId] = games.Select(m => m.Name).ToList();
+                                    _multipleDataForUser[chatId] = games.Select(m => m.name).ToList();
                                     _botWaitsForQuery[chatId] = QueryAction.GameSelecting;
                                 }
                             }
@@ -139,13 +140,13 @@ namespace VGB
                                 case "Ok":
                                     _singleDataForUser.TryGetValue(chatId, out title);
                                     var game = await _service.SingleGameSearch(title);
-                                   
-                                    _singleDataForUser[chatId] = game.Name;
+                                    _singleDataForUser[chatId] = game.name;
                                     await SendInfoAboutGame(chatId, game);
                                     break;
                                 case "no":
                                 case "cancel":
                                     _singleDataForUser.Remove(chatId);
+                                    _botWaitsForQuery.Remove(chatId);
                                    
                                     await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleCancelAnswer());
                                     break;
@@ -158,7 +159,7 @@ namespace VGB
 
                     case QueryAction.CharacterSearching:
                         {
-                            var characters = await _service.SearchCharacters(messagedata.Text);
+                            var characters = _service.SearchCharacters(messagedata.Text);
 
                             if (characters != null && characters.Count != 0)
                             {
@@ -217,7 +218,7 @@ namespace VGB
                                 var game = await _service.GetRandomGameMod(_modes[messagedata.Text.ToLower().Trim()]);
                                 await SendInfoAboutGame(chatId, game);
                                 
-                                _singleDataForUser[chatId] = game.Name;
+                                _singleDataForUser[chatId] = game.name;
                             }
                             else if (messagedata.Text.Trim().ToLower() == "cancel")
                             {
@@ -237,7 +238,7 @@ namespace VGB
                 switch (messagedata.Text.ToLower().Trim())
                 {
                     case "/start":
-                    case "/info":
+                    case "/getinfo":
                     case "hi":
                     case "hello":
                         {
@@ -245,7 +246,9 @@ namespace VGB
                             break;
                         }
                     case "/searchgames":
-                        {
+                    {
+                      //  Repository.Game title = _service.SearchGame("Battlefield-1");
+                      //  _singleDataForUser[chatId] = title.name;
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchInjection());
                             _botWaitsForQuery[chatId] = QueryAction.GameSearching;
                             break;
@@ -259,12 +262,19 @@ namespace VGB
                             _botWaitsForQuery.Add(chatId, QueryAction.RandomGameSelecting);
                             break;
                         }
-                    case "searchcharacters":
+                    case "/searchcharacters":
                         {
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.CharacterSearchInjection());
                             _botWaitsForQuery[chatId] = QueryAction.CharacterSearching;
                             break;
                         }
+                    case "/getinforamation":
+                    {
+                        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.ShowInforamation());
+                        _botWaitsForQuery[chatId] = QueryAction.GameSearching;
+                        break;
+
+                    }
                     //case "/getnowplaying":
                     //    {
                     //        var movies = await _service.GetNowPlaying();
@@ -300,19 +310,19 @@ namespace VGB
 
 
 
-        public async Task SendInfoAboutGame(long chatId, Game game)
+        public async Task SendInfoAboutGame(long chatId, IGamesData.GamesData.Repository.Game game)
         {
 
             await _client.SendChatAction(chatId, ChatAction.Uploading_Photo);
-            await _client.SendPhotoAsync(chatId, game.Cover, $"Poster to ''{game.Name}''");
+            await _client.SendPhotoAsync(chatId,$"Poster to ''{game.name}''");
             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GetGameInformMessage(game));
-            if (game._IGDBlink != null)
-                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameIGDBApp(game._IGDBlink));
+            //if (game._IGDBlink != null)
+            //    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameIGDBApp(game._IGDBlink));
         }
 
         public async Task SendInfoAboutCharacter(long chatId, string name)
         {
-            var characters = await _service.SearchCharacters(name);
+            var characters = _service.SearchCharacters(name);
             if (characters != null && characters.Count != 0)
             {
                 await _client.SendChatAction(chatId, ChatAction.Uploading_Photo);

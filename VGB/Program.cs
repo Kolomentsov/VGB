@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VGB
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {

@@ -8,72 +8,124 @@ using System.Threading.Tasks;
 using VGB.Interfaces;
 using Newtonsoft.Json;
 using System.IO;
+using System.Net;
+using System.Net.Http.Headers;
+using IGamesData.GamesData;
 using VGB.IGdbDTO;
+using Telegram.Bot.Types;
 
 namespace VGB
 {
     class GamesService : IGamesService
     {
         const string _token = "cfaa31dfb2add3e949ea02fd4ed5581f";
-        public async Task<List<Game>> SearchGames(string query)
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    string[] words = query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    string source = String.Join("+", words);
-                    string result = await client.GetStringAsync(String.Format("https://api-2445582011268.apicast.io/?s={0}&Accept=json", source));
-                    var data = JsonConvert.DeserializeObject<IGdbGamesResponce<IGdbGames>>(result);
+        //public async Task<List<IGamesData.GamesData.Repository.Game>> SearchGames(string query)
+        //{
+        //    try
+        //    {
+        //        using (var client = new HttpClient())
+        //        {
+        //            string[] words = query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        //            string source = String.Join("+", words);
+        //            string result = await client.GetStringAsync(String.Format("https://api-2445582011268.apicast.io/?s={0}&Accept=json", source));
+        //            var data = JsonConvert.DeserializeObject<IGdbGamesResponce<IGdbGames>>(result);
 
-                    if (data.Games != null && data.Games.Count != 0)
-                    {
-                        return data.Games.Select(x => ConvertToGame(x)).ToList();
-                    }
-                    else return null;
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return null;
-            }
+        //            if (data.Games != null && data.Games.Count != 0)
+        //            {
+        //                return data.Games.Select(x => ConvertToGame(x)).ToList();
+        //            }
+        //            else return null;
+        //        }
+        //    }
+        //    catch (HttpRequestException)
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        //public async Task<Repository.Game> SingleMovieSearch(string query)
+        //{
+        //    try 
+        //    {
+        //        using (var client = new HttpClient())
+        //        {
+        //            string[] words = query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        //            string source = String.Join("+", words);
+        //            string result = await client.GetStringAsync(String.Format("GET https://api-2445582011268.apicast.io/games/?t={0}&plot=full&Accept=json", source));
+        //            var game = JsonConvert.DeserializeObject<IGdbGames>(result);
+        //            return ConvertToGame(game);
+        //        }
+        //    }
+        //    catch (HttpRequestException)
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        public List<Repository.Game> SearchGames(string query)
+        {
+            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io/games/?search=" + query + "&fields=*");
+            t.Headers.Add("user-key: cfaa31dfb2add3e949ea02fd4ed5581f");
+            t.Accept = "application/json";
+            var s = (HttpWebResponse)t.GetResponse();
+            var responseString = new StreamReader(s.GetResponseStream()).ReadToEnd();
+            return JsonConvert.DeserializeObject<Repository.Game[]>(responseString).ToList();
         }
-
-        public async Task<Game> SingleMovieSearch(string query)
+        public List<Character> SearchCharacters(string query)
         {
-            try 
-            {
-                using (var client = new HttpClient())
-                {
-                    string[] words = query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    string source = String.Join("+", words);
-                    string result = await client.GetStringAsync(String.Format("GET https://api-2445582011268.apicast.io/games/?t={0}&plot=full&Accept=json", source));
-                    var game = JsonConvert.DeserializeObject<IGdbGames>(result);
-                    return ConvertToGame(game);
-                }
-            }
-            catch (HttpRequestException)
-            {
-                return null;
-            }
+            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io//characters/?search=" + query + "&fields=*");
+            t.Headers.Add("user-key: cfaa31dfb2add3e949ea02fd4ed5581f");
+            t.Accept = "application/json";
+            var s = (HttpWebResponse)t.GetResponse();
+            var responseString = new StreamReader(s.GetResponseStream()).ReadToEnd();
+            return JsonConvert.DeserializeObject<Character[]>(responseString).ToList();
         }
 
         public string GetRandom100()
         {
-            List<string> top250Movies = new List<string>();
+            List<string> top100 = new List<string>();
             using (StreamReader streamReader = new StreamReader
-                (@"C:\Users\Пользователь\Desktop\iGamesBot\VGB\IGamesData\GamesData\Top100.txt", Encoding.UTF8))
+                ("../../Top100.txt", Encoding.UTF8))
             {
                 while (!streamReader.EndOfStream)
                 {
-                    string movie = streamReader.ReadLine();
-                    top250Movies.Add(movie.Trim());
+                    string game = streamReader.ReadLine();
+                    top100.Add(game.Trim());
                 }
             }
             Random rnd = new Random();
-            return top250Movies[rnd.Next(0, top250Movies.Count)];
+            return top100[rnd.Next(0, top100.Count)];
+        }
+        public Task<Repository.Game> SingleGameSearch(string query)
+        {
+            throw new NotImplementedException();
         }
 
+        public Repository.Game SearchGame(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<List<Repository.Game>> SomeCommand()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Dictionary<string, int>> GetGameMod()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Repository.Game> GetRandomGameMod(int genreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Repository.Game>> GetSimilarGames(Repository.Game game)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<List<Character>> SearchActors(string query)
         {
@@ -260,52 +312,23 @@ namespace VGB
         //}
 
 
-        public static Game ConvertToGame(IGdbGames game)
-        {
-            return new Game
-            {
+        //public static Game ConvertToGame(IGdbGames game)
+        //{
+        //    return new Game
+        //    {
 
-                Name = game.Name,
-                Year = game.Year,
-                Cover = game.Cover,
-                IGdbID = game.IGdbID,
-                Category = game.Category,
-                GameMod = game.GameMod,
-                Discription = game.Discription,
-                IGdbRating = game.IGdbRating,
-                Publisher = game.Publisher,
-                Status = game.Status
-            };
-        }
+        //        Name = game.Name,
+        //        Year = game.Year,
+        //        Cover = game.Cover,
+        //        IGdbID = game.IGdbID,
+        //        Category = game.Category,
+        //        GameMod = game.GameMod,
+        //        Discription = game.Discription,
+        //        IGdbRating = game.IGdbRating,
+        //        Publisher = game.Publisher,
+        //        Status = game.Status
+        //    };
+        //}
 
-        public Task<Game> SingleGameSearch(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Character>> SearchCharacters(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Game>> SomeCommand()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Dictionary<string, int>> GetGameMod()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Game> GetRandomGameMod(int genreId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Game>> GetSimilarGames(Game game)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,18 +1,21 @@
 ﻿using IGamesData;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IGamesData.GamesData;
+using static IGamesData.GamesData.Repository;
 
 namespace VGB.Interfaces
 {
     interface IGamesService
     {
-        Task<List<Game>> SearchGames(string query);
+        List<Game> SearchGames(string query);
 
         Task<Game> SingleGameSearch(string query);
 
         string GetRandom100();
-
-        Task<List<Character>> SearchCharacters(string query);
+        Game SearchGame(string query);
+       
+        List<Character> SearchCharacters(string query);
 
         Task<List<Game>> SomeCommand();
 

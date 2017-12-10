@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using IGamesData.GamesData;
 
 namespace IGamesData
 {
     public class Character
     {
-        public List<Game> Games { get; set; }
+        public List<Repository.Game> Games { get; set; }
 
         public string Descriprtion { get; set; }
         public string Name { get; set; }

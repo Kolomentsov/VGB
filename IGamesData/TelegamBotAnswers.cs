@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IGamesData.GamesData;
 
 namespace IGamesData
 {
@@ -37,8 +38,8 @@ Here is my list of commands:
 
         public static string RandomGamesChoose()
         => @"- enter ''Ok'' to view info about this game
-             - enter ''Next'' to get another games
-             - enter ''Cancel to cancel this operation";
+         - enter ''Next'' to get another games
+         - enter ''Cancel to cancel this operation";
 
         public static string GetSimilar()
         => "Ok! First I should find a game to which you want to see similars";
@@ -79,27 +80,30 @@ Here is my list of commands:
            "or send ''Cancel'' if there is no suitable character in the list above or you just don't want to see detailed info";
         public static string CharacterSearchInjection()
         => $"Please, enter a name of the character you are looking for";
-        public static string GetGameInformMessage(Game game)
+
+        public static string ShowInforamation()
+            => $"Please, choose game";
+        public static string GetGameInformMessage(Repository.Game game)
         {
             return String.Format(@"{0}  ({1}) 
-Genre: {2}
+Cover: {2}
 IGdbID: {3}
 Category: {4}
-GameMod: {5}
-Discription: {6}
-IGdbRating:{7}
-Publisher: {8}
-Status: {9}"
- , game.Name, game.Year, game.Cover, game.IGdbID, game.Category, game.GameMod, game.Discription, game.IGdbRating, game.Publisher, game.Status);
+Game mode: {5}
+Summary: {6}
+Rating:{7}
+Publishers: {8}
+Storyline: {9}"
+ , game.name, game.created_at, game.cover, game.id, game.category, game.game_modes, game.summary, game.rating, game.publishers, game.storyline);
         }
-        public static string NowPlayAnswer(List<Game> games)
+        public static string NowPlayAnswer(List<Repository.Game> games)
         {
             StringBuilder sb = new StringBuilder();
             int i = 1;
             foreach (var game in games)
             {
-                sb.AppendLine($"{i++}. {game.Name}");
-                sb.AppendLine($"Plot: {game.Discription} \n");
+                sb.AppendLine($"{i++}. {game.name}");
+                sb.AppendLine($"Plot: {game.summary} \n");
             }
             return sb.ToString();
         }
@@ -113,13 +117,13 @@ Status: {9}"
             return sb.ToString();
         }
 
-        public static string GamesSearchAnswer(List<Game> games)
+        public static string GamesSearchAnswer(List<Repository.Game> games)
         {
             StringBuilder sb = new StringBuilder();
             int i = 1;
 
             foreach (var game in games)
-                sb.AppendLine($"{i++}. {game.Name} ({game.Year})");
+                sb.AppendLine($"{i++}. {game.name} ({game.created_at})");
 
             return sb.ToString();
         }
@@ -141,8 +145,8 @@ Status: {9}"
             int i = 1;
             foreach (var game in ch.Games)
             {
-                sb.AppendLine($"\n{i++}. {game.Name}");
-                sb.AppendLine($"Plot: {game.Discription}");
+                sb.AppendLine($"\n{i++}. {game.name}");
+                sb.AppendLine($"Plot: {game.summary}");
             }
             return CharacterName + sb.ToString();
         }
