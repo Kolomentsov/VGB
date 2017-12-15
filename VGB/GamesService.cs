@@ -9,19 +9,18 @@ using VGB.Interfaces;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net;
-using System.Net.Http.Headers;
 using IGamesData.GamesData;
 using VGB.IGdbDTO;
-using Telegram.Bot.Types;
 
 namespace VGB
 {
     class GamesService : IGamesService
-    {
+    { 
         const string _token = "cfaa31dfb2add3e949ea02fd4ed5581f";
         //public async Task<List<IGamesData.GamesData.Repository.Game>> SearchGames(string query)
-        //{
-        //    try
+        //{   
+
+        //    
         //    {
         //        using (var client = new HttpClient())
         //        {
@@ -73,7 +72,7 @@ namespace VGB
         }
         public List<Character> SearchCharacters(string query)
         {
-            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io//characters/?search=" + query + "&fields=name");
+            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io//characters/?search=" + query + "&fields=*");
             t.Headers.Add("user-key: cfaa31dfb2add3e949ea02fd4ed5581f");
             t.Accept = "application/json";
             var s = (HttpWebResponse)t.GetResponse();
@@ -88,6 +87,7 @@ namespace VGB
                 ("../../Top100.txt", Encoding.UTF8))
             {
                 while (!streamReader.EndOfStream)
+
                 {
                     string game = streamReader.ReadLine();
                     top100.Add(game.Trim());
@@ -157,11 +157,6 @@ namespace VGB
             }
         }
 
-        List<Character> IGamesService.SearchCharacters(string query)
-        {
-            throw new NotImplementedException();
-        }
-
 
         //public async Task<List<Game>> GetNowPlaying()
         //{
@@ -169,7 +164,7 @@ namespace VGB
         //    {
         //        using (var client = new HttpClient())
         //        {
-        //            string result = await client.GetStringAsync($"https://api.themoviedb.org/3/movie/now_playing?sort_by=popularity.desc&api_key={_token}");
+        //            string result = await client.GetStringAsync($"");
         //            var response = JsonConvert.DeserializeObject<themoviedbResponse<themoviedbMovie>>(result);
         //            if (response.Results != null && response.Results.Count != 0)
         //            {
@@ -197,7 +192,7 @@ namespace VGB
         //    {
         //        using (var client = new HttpClient())
         //        {
-        //            string result = await client.GetStringAsync($"https://api.themoviedb.org/3/genre/movie/list?api_key={_token}");
+        //            string result = await client.GetStringAsync($");
         //            var response = JsonConvert.DeserializeObject<themoviedbGenreResponse>(result);
         //            var genres = response.Genres.ToDictionary(genre => genre.Name.ToLower().Trim(), genre => genre.Id);
         //            genres.Remove("tv movie");
@@ -212,10 +207,10 @@ namespace VGB
         //}
 
 
-        //public async Task<Movie> GetRandomMovieByGenre(int genreId)
+        //public async Task<Game> GetRandomByGenre(int genreId)
         //{
         //    string url =
-        //        $"https://api.themoviedb.org/3/discover/movie?with_genres={genreId}&vote_average.gte=6&vote_count.gte=500&api_key={_token}";
+        //        $"";
         //    try
         //    {
         //        using (var client = new HttpClient())
@@ -239,82 +234,10 @@ namespace VGB
         //}
 
 
-        //public async Task<string> GetTrailerLinkForMovie(string title)
-        //{
-        //    try
-        //    {
-        //        using (var client = new HttpClient())
-        //        {
-        //            var findMoviesUrl = $"https://api.themoviedb.org/3/search/movie?api_key={_token}&language=en-US&query={title}";
-        //            var moviesResponse = await client.GetStringAsync(findMoviesUrl);
-        //            var movies = JsonConvert.DeserializeObject<themoviedbResponse<themoviedbMovie>>(moviesResponse).Results;
-
-        //            string movieId;
-        //            if (movies != null && movies.Count != 0)
-        //            {
-        //                var movieWithId = movies.FirstOrDefault(m => !String.IsNullOrWhiteSpace(m.TMDBId));
-
-        //                if (movieWithId != null)
-        //                {
-        //                    movieId = movieWithId.TMDBId;
-        //                    var url = $"https://api.themoviedb.org/3/movie/{movieId}/videos?api_key={_token}";
-        //                    var trailerResponse = await client.GetStringAsync(url);
-
-        //                    var videos = JsonConvert.DeserializeObject<themoviedbResponse<themoviedbVideo>>(trailerResponse).Results;
-        //                    var trailer = videos.FirstOrDefault(t => t.Type.ToLower().Trim() == "trailer");
-        //                    return trailer != null ? $"https://www.youtube.com/watch?v={trailer.YouTubeKey}" : null;
-        //                }
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    catch (HttpRequestException)
-        //    {
-        //        return null;
-        //    }
-        //}
+    
 
 
-        //public async Task<List<Movie>> GetSimilarMovies(Movie movie)
-        //{
-        //    try
-        //    {
-        //        using (var client = new HttpClient())
-        //        {
-        //            var findMoviesUrl = $"https://api.themoviedb.org/3/search/movie?api_key={_token}&language=en-US&query={movie.Title}";
-        //            var moviesResponse = await client.GetStringAsync(findMoviesUrl);
-        //            var movies = JsonConvert.DeserializeObject<themoviedbResponse<themoviedbMovie>>(moviesResponse).Results;
-
-        //            string movieId;
-        //            if (movies != null && movies.Count != 0)
-        //            {
-        //                var movieWithId = movies.FirstOrDefault(m => !String.IsNullOrWhiteSpace(m.TMDBId));
-
-        //                if (movieWithId != null)
-        //                {
-        //                    movieId = movieWithId.TMDBId;
-        //                    var url = $"https://api.themoviedb.org/3/movie/{movieId}/similar_movies?api_key={_token}";
-        //                    var similarResponse = await client.GetStringAsync(url);
-        //                    var similar = JsonConvert.DeserializeObject<themoviedbResponse<themoviedbMovie>>(similarResponse).Results;
-
-        //                    return similar.Select(m => new Movie
-        //                    {
-        //                        Title = m.Title,
-        //                        Year = m.Release,
-        //                        Description = m.Plot,
-        //                        ImdbRating = m.VoteAverage
-
-        //                    }).ToList();
-        //                }
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    catch (HttpRequestException)
-        //    {
-        //        return null;
-        //    }
-        //}
+       
 
 
         //public static Game ConvertToGame(IGdbGames game)

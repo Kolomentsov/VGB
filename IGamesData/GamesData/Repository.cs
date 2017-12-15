@@ -137,16 +137,6 @@ namespace IGamesData.GamesData
             public int? franchise { get; set; }
             public List<int?> franchises { get; set; }
         }
-        //public class Genres
-        //{
-        //    public int id { get; set; }
-        //    public string name { get; set; }
-        //    public object created_at { get; set; }
-        //    public object updated_at { get; set; }
-        //    public string slug { get; set; }
-        //    public string url { get; set; }
-        //    public IList<int> games { get; set; }
-        //}
     }
 }
         

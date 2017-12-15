@@ -89,7 +89,7 @@ namespace VGB
                                 var game = await _service.SingleGameSearch(title);
                                 _multipleDataForUser.Remove(chatId);
 
-                                //Send information about movie if it is not /searchsimilar request.
+                               
                                 //If it is, we won't show full info about movies, we will show simiar movies instead.
                                 if (!_searchingSimilarUsers.Contains(chatId))
                                 {

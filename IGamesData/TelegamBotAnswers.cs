@@ -145,8 +145,8 @@ Storyline: {9}"
             int i = 1;
             foreach (var game in ch.Games)
             {
-              //  sb.AppendLine($"\n{i++}. {game.name}");
-              //  sb.AppendLine($"Plot: {game.summary}");
+               // sb.AppendLine($"\n{i++}. {game.name}");
+               // sb.AppendLine($"Plot: {game.summary}");
             }
             return CharacterName + sb.ToString();
         }
