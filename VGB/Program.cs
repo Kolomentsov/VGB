@@ -20,7 +20,6 @@ namespace VGB
             telegramBotClient.StartBot();
             Console.ReadLine();
 
-
         }
     }
 }
