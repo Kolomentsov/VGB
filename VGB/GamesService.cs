@@ -20,7 +20,7 @@ namespace VGB
         //public async Task<List<IGamesData.GamesData.Repository.Game>> SearchGames(string query)
         //{   
 
-        //    
+        //    try
         //    {
         //        using (var client = new HttpClient())
         //        {
