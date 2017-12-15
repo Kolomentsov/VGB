@@ -106,7 +106,7 @@ namespace IGamesData.GamesData
             public double total_rating { get; set; }
             public int total_rating_count { get; set; }
             public int rating_count { get; set; }
-            public List<int> games { get; set; }
+            public int[] games { get; set; }
             public List<int> tags { get; set; }
             public List<int> developers { get; set; }
             public List<int> publishers { get; set; }
@@ -137,6 +137,16 @@ namespace IGamesData.GamesData
             public int? franchise { get; set; }
             public List<int?> franchises { get; set; }
         }
+        //public class Genres
+        //{
+        //    public int id { get; set; }
+        //    public string name { get; set; }
+        //    public object created_at { get; set; }
+        //    public object updated_at { get; set; }
+        //    public string slug { get; set; }
+        //    public string url { get; set; }
+        //    public IList<int> games { get; set; }
+        //}
     }
 }
         

@@ -73,7 +73,7 @@ namespace VGB
         }
         public List<Character> SearchCharacters(string query)
         {
-            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io//characters/?search=" + query + "&fields=*");
+            var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io//characters/?search=" + query + "&fields=name");
             t.Headers.Add("user-key: cfaa31dfb2add3e949ea02fd4ed5581f");
             t.Accept = "application/json";
             var s = (HttpWebResponse)t.GetResponse();
@@ -155,6 +155,11 @@ namespace VGB
             {
                 return null;
             }
+        }
+
+        List<Character> IGamesService.SearchCharacters(string query)
+        {
+            throw new NotImplementedException();
         }
 
 
