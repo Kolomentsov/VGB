@@ -15,7 +15,7 @@ namespace VGB
 
             GamesService gamesService = new GamesService();
 
-            BotManager manager = new BotManager(telegramBotClient, gamesService);
+           BotManager manager = new BotManager(telegramBotClient, gamesService);
 
             telegramBotClient.StartBot();
             Console.ReadLine();

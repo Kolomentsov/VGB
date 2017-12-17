@@ -15,6 +15,7 @@ namespace VGB
 
         public long ChatID { get; set; }
 
+
         public string PhoneNumber { get; set; }
 
         public BotSession(long chatId, BotState bsb = BotState.BaseStateBot)
