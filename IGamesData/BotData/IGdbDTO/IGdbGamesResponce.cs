@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using IGamesData.BotData.IGdbDTO;
 using Newtonsoft.Json;
 
 namespace VGB.IGdbDTO
 {
-    public class IGdbGamesResponce<T>
+    public class IGdbGamesResponce
     {
         [JsonProperty(PropertyName = "Search")]
-        public List<IGdbGames> Games { get; set; }
-
-        [JsonProperty(PropertyName = "totalResults")]
-        public List<T> TotalResults { get; set; }
+        public List<IGDBGenres> Genres { get; set; }
     }
 }

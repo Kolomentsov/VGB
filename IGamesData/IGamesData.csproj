@@ -63,9 +63,10 @@
     <Compile Include="BotData\Data\UserData.cs" />
     <Compile Include="BotData\IGdbDTO\IGdbGames.cs" />
     <Compile Include="BotData\IGdbDTO\IGdbGamesResponce.cs" />
+    <Compile Include="BotData\IGdbDTO\IGDBGenres.cs" />
     <Compile Include="GamesData\Character.cs" />
-    <Compile Include="GamesData\Game.cs" />
     <Compile Include="GamesData\GameModes.cs" />
+    <Compile Include="GamesData\Genre.cs" />
     <Compile Include="GamesData\Repository.cs" />
     <Compile Include="StorageDB\Database.cs" />
     <Compile Include="StorageDB\StorageUserRegustration.cs" />

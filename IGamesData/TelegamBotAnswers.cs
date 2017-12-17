@@ -14,6 +14,7 @@ namespace IGamesData
             return (@"Hello! I'm bot that can provides you some information about computer games:
 Here is my list of commands:
 /getinfo - Shows information about this bot. 
+/getgenre
 /searchcharacters - Search characters by the name.
 /searchgames - Provides search by games title.
 /gettop100 - Returns random games from IGDB top-100 best games.");
@@ -61,18 +62,15 @@ enter 'Cancel' to cancel this operation";
         public static string GamesChooseMessage(int end, int from = 1)
         => $"Please, choose the exact game to get more detailed information (enter its number from {from} to {end}) " +
            "or send ''Cancel''  if you just don't want to see detailed information or if there is no suitable game in the list above";
+        public static string GenreChooseMessage(int end, int from = 1)
+        => $"There different genres in games! Send ''Cancel''  Please enter ''Cancel'' to cancel the operation";
+
 
         public static string GenresInjection()
-        => "Here are all the genres I've already known:";
+        => "Here are all the genres I've already known. Please enter 'Next' to show their";
 
         public static string GenresChoose()
-        => $"Please enter the name of genre to get random game of this or ''Cancel'' to cancel the operation";
-
-        public static string SomeGameOfGenre(string genre)
-        => $"I find random game of {genre} for you";
-
-        public static string GameIGDBApp(string linktoweb)
-        => $"You can see more information about this game on IGDB official website\n{linktoweb}";
+        => $"Please enter ''Cancel'' to cancel the operation";
 
         public static string NowPlayingInjection()
         => "Here are the games that are now playing people:";
@@ -96,26 +94,26 @@ Slug: {5}
 Url : {6}
 {7}"
 , game.name, game.id,game.popularity,game.hypes, game.rating, game.slug, game.url, game.summary);
+
         }
-        public static string NowPlayAnswer(List<Repository.Game> games)
+        public static string GetCharacterInformMessage(Character character)
         {
-            StringBuilder sb = new StringBuilder();
-            int i = 1;
-            foreach (var game in games)
-            {
-                sb.AppendLine($"{i++}. {game.name}");
-                sb.AppendLine($"Plot: {game.summary} \n");
-            }
-            return sb.ToString();
+            return String.Format(@"{0} 
+IGdbID: {1}
+Popularity: {2} (A number based on traffic to that game page)
+Hypes: {3} (Number of follows a game gets before release)
+Rating: {4}
+Slug: {5}
+Url : {6}
+{7}"
+, character.name, character.id, character.games, character.gender, character.created_at, character.slug, character.url, character.updated_at);
         }
-        public static string GameModAnswer(List<string> gamemods)
+        public static string GameModAnswer(Genre genre)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (var gm in gamemods)
-            {
-                sb.AppendLine($"- {gm}");
-            }
-            return sb.ToString();
+            return String.Format(@"{0} 
+IGdbID: {1}
+Slug: {2}"
+, genre.name, genre.id, genre.slug);
         }
 
         public static string GamesSearchAnswer(List<Repository.Game> games)

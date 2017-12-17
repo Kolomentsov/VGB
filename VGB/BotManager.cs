@@ -1,6 +1,7 @@
 ﻿using IGamesData;
 using IGamesData.BotData;
 using IGamesData.BotData.ActionWithBot;
+using IGamesData.GamesData;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,13 +11,10 @@ namespace VGB
 {
     class BotManager
     {
-        Dictionary<string, int> _modes;
         List<long> _searchingSimilarUsers;
         Dictionary<long, QueryAction> _botWaitsForQuery;
         Dictionary<long, List<string>> _multipleDataForUser;
         Dictionary<long, string> _singleDataForUser;
-
-        bool genresWasDownloaded;
 
         IGamesService _service;
         ITelegramBot _client;
@@ -70,6 +68,50 @@ namespace VGB
                                 _botWaitsForQuery.Remove(chatId);
                             }
                             break;
+                        }
+                    case QueryAction.GenreSearching:
+                        {
+                            
+                            switch (messagedata.Text.Trim().ToLower())
+                            {
+                                case "next":
+                                   var title = _service.GetGenres();
+                                    _singleDataForUser[chatId] = title[0].name;
+                                    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameModAnswer(title[0]));
+                                    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SearchAdvice());
+                                    break;
+                                default:
+                                    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.WrongChoiceMessage());
+                                    break;
+                            }
+                            break;
+                            //var genre = _service.GetGenres();
+                            //if (genre != null && genre.Count != 0)
+                            //{
+                            //    if (genre.Count == 1)
+                            //    {
+                            //        await SendInfoAboutGenre(chatId, genre[0]);
+
+                            //        _singleDataForUser[chatId] = genre[0].name;
+                            //    }
+                            //    else
+                            //    {
+                            //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleInjectionAnswer());
+                            //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameModAnswer(genre[0]));
+                            //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GenreChooseMessage(genre.Count()));
+                            //        _multipleDataForUser[chatId] = genre.Select(m => m.name).ToList();
+                            //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleCancelAnswer());
+                            //        break;
+
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.NotFoundMessage());
+
+                            //    _botWaitsForQuery.Remove(chatId);
+                            //}
+                            //break;
                         }
                     case QueryAction.GameSelecting:
                         {
@@ -154,7 +196,7 @@ namespace VGB
                                 if (characters.Count == 1)
                                 {
                                     _multipleDataForUser.Remove(chatId);
-                                    await SendInfoAboutCharacter(chatId, characters[0].name);
+                                    await SendInfoAboutCharacter(chatId, characters[0]);
                                     _botWaitsForQuery.Remove(chatId);
                                 }
                                 else
@@ -178,15 +220,29 @@ namespace VGB
                     case QueryAction.CharacterSelecting:
                         {
                             int chosenIndex = 1;
+
                             if (int.TryParse(messagedata.Text, out chosenIndex) && chosenIndex >= 1 &&
-                              chosenIndex <= _multipleDataForUser[chatId].Count)
+                                chosenIndex <= _multipleDataForUser[chatId].Count)
                             {
-                                await SendInfoAboutCharacter(chatId, _multipleDataForUser[chatId][chosenIndex - 1]);
                                 var title = _multipleDataForUser[chatId][chosenIndex - 1];
                                 var character = _service.SingleCharacterSearch(title);
-
                                 _multipleDataForUser.Remove(chatId);
+
+
+                                //If this is done, the bot will show characters instead
+                                if (!_searchingSimilarUsers.Contains(chatId))
+                                {
+                                    await SendInfoAboutCharacter(chatId, character[0]);
+                                    _singleDataForUser[chatId] = title;
+                                }
+                                else
+                                {
+                                    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.NotFoundSimilar());
+                                }
+                                _searchingSimilarUsers.Remove(chatId);
                                 _botWaitsForQuery.Remove(chatId);
+
+
                             }
                             else if (messagedata.Text.Trim().ToLower() == "cancel")
                             {
@@ -200,27 +256,7 @@ namespace VGB
                             }
                         }
                         break;
-                    case QueryAction.GameModSelecting:
-                        {
-                            if (genresWasDownloaded && _modes.ContainsKey(messagedata.Text.Trim().ToLower()))
-                            {
-                                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SomeGameOfGenre(messagedata.Text.Trim().ToLower()));
-                                var game = await _service.GetRandomGameMod(_modes[messagedata.Text.ToLower().Trim()]);
-                                await SendInfoAboutGame(chatId, game);
-
-                                _singleDataForUser[chatId] = game.name;
-                            }
-                            else if (messagedata.Text.Trim().ToLower() == "cancel")
-                            {
-                                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleCancelAnswer());
-                                _botWaitsForQuery.Remove(chatId);
-                            }
-                            else
-                            {
-                                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.WrongChoiceMessage());
-                            }
-                            break;
-                        }
+                    
                 }
             }
             else
@@ -256,21 +292,10 @@ namespace VGB
                             _botWaitsForQuery[chatId] = QueryAction.CharacterSearching;
                             break;
                         }
-                    //case "/getbygamemod":
-                    //    {
-                    //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleInjectionAnswer());
-                    //        _botWaitsForQuery[chatId] = QueryAction.GameModSearching;
-                    //        break;
-                    //    }
-
-                    case "getbygamemod":
+                    case "/getgenre":
                         {
-                            // _modes = await _service.GetGameMod();
-                            genresWasDownloaded = _modes != null && _modes.Count != 0;
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GenresInjection());
-                            await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameModAnswer(_modes.Keys.ToList()));
-                            await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GenresChoose());
-                            _botWaitsForQuery[chatId] = QueryAction.GameModSelecting;
+                            _botWaitsForQuery[chatId] = QueryAction.GenreSearching;
                             break;
                         }
                     case "/getsimilars":
@@ -287,27 +312,26 @@ namespace VGB
                 }
             }
         }
-
-
-
         public async Task SendInfoAboutGame(long chatId, IGamesData.GamesData.Repository.Game game)
         {
             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GetGameInformMessage(game));
             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SearchAdvice());
 
         }
-
-        public async Task SendInfoAboutCharacter(long chatId, string name)
+        public async Task SendInfoAboutGenre(long chatId, Genre genre)
         {
-            var characters = _service.SingleCharacterSearch(name);
-            if (characters != null && characters.Count != 0)
+            await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameModAnswer(genre));
+            await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SearchAdvice());
+
+        }
+        public async Task SendInfoAboutCharacter(long chatId, Character character)
+        {
+            if (character != null)
             {
-                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SingleCharactersAnswer(characters));
+                await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GetCharacterInformMessage(character));
                 await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchAdvice());
             }
             else await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.NotFoundMessage());
-
         }
-
     }
 }

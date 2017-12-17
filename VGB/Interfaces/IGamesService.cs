@@ -15,11 +15,7 @@ namespace VGB.Interfaces
         string GetRandom100();
         List<Character> SearchCharacters(string query);
         List<Character> SingleCharacterSearch(string query);
-
-        Task<List<Game>> SomeCommand();
-
-        Task<Game> GetRandomGameMod(int genreId);
-
+        List<Genre> GetGenres();
         Task<List<Game>> GetSimilarGames(Game game);
     }
 }
