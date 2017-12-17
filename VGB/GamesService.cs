@@ -37,6 +37,7 @@ namespace VGB
                 return null;
             }
         }
+
         public List<Character> SingleCharacterSearch(string query)
         {
             try
