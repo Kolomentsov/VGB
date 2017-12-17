@@ -7,6 +7,7 @@
         GameSelecting,
         GameSearching,
         GameModSelecting,
+        GameModSearching,
         RandomGameSelecting
     }
 }

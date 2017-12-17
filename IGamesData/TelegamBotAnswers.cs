@@ -11,15 +11,15 @@ namespace IGamesData
     {
         public static string GetInfo()
         {
-            return String.Format(@"Hello! I'm bot that can provides you some information about computer games:
+            return (@"Hello! I'm bot that can provides you some information about computer games:
 Here is my list of commands:
 /getinfo - Shows information about this bot. 
 /searchcharacters - Search characters by the name.
 /searchgames - Provides search by games title.
-/getbygamemod - Returns random games by a particular genre.
-/getsimilars - Returns games that are similar to some game.
-/some command???
 /gettop100 - Returns random games from IGDB top-100 best games.");
+/// getbygamemod - Returns random games by a particular genre.
+/// getsimilars - Returns games that are similar to some game.
+// / some command ???
         }
         public static string SimpleCancelAnswer()
         => "Ok! Operation is cancelled, let's try /getinfo to see what else I can do for you!";
@@ -32,14 +32,16 @@ Here is my list of commands:
 
         public static string GamesSearchAdvice()
         => "You can always use /searchgames command to see more information about one of these games";
+        public static string SearchAdvice()
+        => "Enter 'Cancel' to cancel this operation";
 
         public static string RandomGamesAnswer(string t)
         => $"There is a random games from IGDB top 100 gamess for you:\n ''{t}''";
 
         public static string RandomGamesChoose()
-        => @"- enter ''Ok'' to view info about this game
-         - enter ''Next'' to get another games
-         - enter ''Cancel to cancel this operation";
+        => @"
+enter 'Next' to get another games
+enter 'Cancel' to cancel this operation";
 
         public static string GetSimilar()
         => "Ok! First I should find a game to which you want to see similars";
@@ -85,16 +87,15 @@ Here is my list of commands:
             => $"Please, choose game";
         public static string GetGameInformMessage(Repository.Game game)
         {
-            return String.Format(@"{0}  ({1}) 
-Cover: {2}
-IGdbID: {3}
-Category: {4}
-Game mode: {5}
-Summary: {6}
-Rating:{7}
-Publishers: {8}
-Storyline: {9}"
- , game.name, game.created_at, game.cover, game.id, game.category, game.game_modes, game.summary, game.rating, game.publishers, game.storyline);
+            return String.Format(@"{0} 
+IGdbID: {1}
+Popularity: {2} (A number based on traffic to that game page)
+Hypes: {3} (Number of follows a game gets before release)
+Rating: {4}
+Slug: {5}
+Url : {6}
+{7}"
+, game.name, game.id,game.popularity,game.hypes, game.rating, game.slug, game.url, game.summary);
         }
         public static string NowPlayAnswer(List<Repository.Game> games)
         {

@@ -9,35 +9,17 @@ namespace VGB.IGdbDTO
 {
     public class IGdbGames
     {
+        [JsonProperty(PropertyName ="id")]
+        public int id { get; set; }
         [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
-
+        public string name { get; set; }
+        [JsonProperty(PropertyName = "slug")]
+        public string slug { get; set; }
+        [JsonProperty(PropertyName = "url")]
+        public string url { get; set; }
         [JsonProperty(PropertyName = "created_at")]
-        public int Year { get; set; }
-
-        [JsonProperty(PropertyName = "cover")]
-        public string Cover { get; set; }
-
-        [JsonProperty(PropertyName = "id")]
-        public uint IGdbID { get; set; }
-
-        [JsonProperty(PropertyName = "category")]
-        public int Category { get; set; }
-
-        [JsonProperty(PropertyName = "game_modes")]
-        public List<int> GameMod { get; set; }
-
-        [JsonProperty(PropertyName = "summary")]
-        public string Discription { get; set; }
-
-        [JsonProperty(PropertyName = "rating")]
-        public double IGdbRating { get; set; }
-
-        [JsonProperty(PropertyName = "publishers")]
-        public List<int> Publisher { get; set; }
-
-        [JsonProperty(PropertyName = "status")]
-        public int Status { get; set; }
+        public object created_at { get; set; }
+        
 
     }
 }

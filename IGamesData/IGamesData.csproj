@@ -65,6 +65,7 @@
     <Compile Include="BotData\IGdbDTO\IGdbGamesResponce.cs" />
     <Compile Include="GamesData\Character.cs" />
     <Compile Include="GamesData\Game.cs" />
+    <Compile Include="GamesData\GameModes.cs" />
     <Compile Include="GamesData\Repository.cs" />
     <Compile Include="StorageDB\Database.cs" />
     <Compile Include="StorageDB\StorageUserRegustration.cs" />

@@ -86,20 +86,20 @@ namespace VGB
                                 chosenIndex <= _multipleDataForUser[chatId].Count)
                             {
                                 var title = _multipleDataForUser[chatId][chosenIndex - 1];
-                                var game = await _service.SingleGameSearch(title);
+                                var game = _service.SingleGameSearch(title);
                                 _multipleDataForUser.Remove(chatId);
 
                                
                                 //If it is, we won't show full info about movies, we will show simiar movies instead.
                                 if (!_searchingSimilarUsers.Contains(chatId))
                                 {
-                                    await SendInfoAboutGame(chatId, game);
+                                    await SendInfoAboutGame(chatId, game[0]);
                                     _singleDataForUser[chatId] = title;
                                 }
                                 else
                                 {
-                                    var games = await _service.GetSimilarGames(game);
-                                    if (games != null && games.Count != 0)
+                                    var games = await _service.GetSimilarGames(game[0]);
+                                    if (games != null)
                                     {
                                         await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchAnswer(games));
                                         await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchAdvice());
@@ -136,12 +136,6 @@ namespace VGB
                                     _singleDataForUser[chatId] = title;
                                     await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.RandomGamesAnswer(title));
                                     await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.RandomGamesChoose());
-                                    break;
-                                case "Ok":
-                                    _singleDataForUser.TryGetValue(chatId, out title);
-                                    var game = await _service.SingleGameSearch(title);
-                                    _singleDataForUser[chatId] = game.name;
-                                    await SendInfoAboutGame(chatId, game);
                                     break;
                                 case "no":
                                 case "cancel":
@@ -247,8 +241,6 @@ namespace VGB
                         }
                     case "/searchgames":
                     {
-                      //  Repository.Game title = _service.SearchGame("Battlefield-1");
-                      //  _singleDataForUser[chatId] = title.name;
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GamesSearchInjection());
                             _botWaitsForQuery[chatId] = QueryAction.GameSearching;
                             break;
@@ -268,13 +260,19 @@ namespace VGB
                             _botWaitsForQuery[chatId] = QueryAction.CharacterSearching;
                             break;
                         }
-                    case "/getinforamation":
-                    {
-                        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.ShowInforamation());
-                        _botWaitsForQuery[chatId] = QueryAction.GameSearching;
-                        break;
+                    //case "/getbygamemod":
+                    //    {
+                    //        await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SimpleInjectionAnswer());
+                    //        _botWaitsForQuery[chatId] = QueryAction.GameModSearching;
+                    //        break;
+                    //    }
+                    //case "/getinforamation":
+                    //{
+                    //    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.ShowInforamation());
+                    //    _botWaitsForQuery[chatId] = QueryAction.GameSearching;
+                    //    break;
 
-                    }
+                    //}
                     //case "/getnowplaying":
                     //    {
                     //        var movies = await _service.GetNowPlaying();
@@ -285,7 +283,7 @@ namespace VGB
                     //    }
                     case "getbygamemod":
                         {
-                            _modes = await _service.GetGameMod();
+                           // _modes = await _service.GetGameMod();
                             genresWasDownloaded = _modes != null && _modes.Count != 0;
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GenresInjection());
                             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameModAnswer(_modes.Keys.ToList()));
@@ -312,12 +310,9 @@ namespace VGB
 
         public async Task SendInfoAboutGame(long chatId, IGamesData.GamesData.Repository.Game game)
         {
-
-            await _client.SendChatAction(chatId, ChatAction.Uploading_Photo);
-            await _client.SendPhotoAsync(chatId,$"Poster to ''{game.name}''");
             await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GetGameInformMessage(game));
-            //if (game._IGDBlink != null)
-            //    await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.GameIGDBApp(game._IGDBlink));
+            await _client.SendMessageAsync(MessageAction.MesText, chatId, TelegamBotAnswers.SearchAdvice());
+
         }
 
         public async Task SendInfoAboutCharacter(long chatId, string name)
