@@ -135,21 +135,21 @@ Url : {6}
             int n = 1;
             foreach (var ch in characters)
             {
-                sb.AppendLine($"{n++}. {ch.Name}");
+                sb.AppendLine($"{n++}. {ch.name}");
             }
             return sb.ToString();
         }
-        public static string SingleCharactersAnswer(Character ch)
+        public static string SingleCharactersAnswer(List<Character> ch)
         {
-            string CharacterName = $"Sending most popular games of {ch.Name}: \n";
+            var CharacterName = $"Sending most popular games of {ch[0]}: \n";
             StringBuilder sb = new StringBuilder();
             int i = 1;
-            foreach (var game in ch.Games)
+            foreach (var game in ch)
             {
-               // sb.AppendLine($"\n{i++}. {game.name}");
-               // sb.AppendLine($"Plot: {game.summary}");
+                sb.AppendLine($"\n{i++}. {game.name}");
+                sb.AppendLine($"URL: {game.url}");
             }
-            return CharacterName + sb.ToString();
+            return sb.ToString();
         }
     }
 }

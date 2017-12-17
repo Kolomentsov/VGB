@@ -43,7 +43,7 @@ namespace VGB
             {
                 using (var client = new HttpClient())
                 {
-                    var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io/games/?search=" + query + "&fields=*");
+                    var t = (HttpWebRequest)WebRequest.Create(@"https://api-2445582011268.apicast.io/characters/?search=" + query + "&fields=*");
                     t.Headers.Add("user-key: cfaa31dfb2add3e949ea02fd4ed5581f");
                     t.Accept = "application/json";
                     var s = (HttpWebResponse)t.GetResponse();
@@ -111,6 +111,10 @@ namespace VGB
         }
 
         public GameModes SearchGamesModes(string query)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<List<Game>> GetSimilarGames(Game game)
         {
             throw new NotImplementedException();
         }
@@ -205,9 +209,6 @@ namespace VGB
             };
         }
 
-        public Task<List<Game>> GetSimilarGames(Game game)
-        {
-            throw new NotImplementedException();
-        }
+ 
     }
 }
