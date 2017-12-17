@@ -62,14 +62,13 @@
     <Compile Include="BotData\Data\MessageData.cs" />
     <Compile Include="BotData\Data\UserData.cs" />
     <Compile Include="BotData\IGdbDTO\IGdbGames.cs" />
-    <Compile Include="BotData\IGdbDTO\IGdbGamesResponce.cs" />
     <Compile Include="GamesData\Character.cs" />
-    <Compile Include="GamesData\Game.cs" />
     <Compile Include="GamesData\GameModes.cs" />
+    <Compile Include="GamesData\Genre.cs" />
     <Compile Include="GamesData\Repository.cs" />
-    <Compile Include="StorageDB\Database.cs" />
-    <Compile Include="StorageDB\StorageUserRegustration.cs" />
-    <Compile Include="StorageDB\User.cs" />
+    <Compile Include="StorageDB%28not implemented%29\Database.cs" />
+    <Compile Include="StorageDB%28not implemented%29\StorageUserRegustration.cs" />
+    <Compile Include="StorageDB%28not implemented%29\User.cs" />
     <Compile Include="TelegamBotAnswers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
